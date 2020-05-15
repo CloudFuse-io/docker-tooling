@@ -10,6 +10,8 @@ RUN yum update  -y && \
     openssl-devel && \
   yum clean all
 
+
+# download a *recent* version of cmake from cmake.org
 ENV CMAKE_VERSION_MAJOR 3.17
 ENV CMAKE_VERSION 3.17.1
 
