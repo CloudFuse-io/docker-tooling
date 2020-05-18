@@ -7,4 +7,4 @@ RUN git clone -b llvmorg-${CLANG_VERSION} --depth 1 https://github.com/llvm/llvm
 RUN mkdir -p /source/build && \
   cd /source/build && \
   cmake -DLLVM_ENABLE_PROJECTS=clang -G "Unix Makefiles" ../llvm && \
-  make
+  make -j 4

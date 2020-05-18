@@ -4,6 +4,7 @@ RUN yum update  -y && \
   yum install -y \
     curl-devel \
     clang6.0 \
+    clang6.0-tools-extra \
     git \
     ninja-build \
     openssl-devel && \
