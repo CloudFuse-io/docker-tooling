@@ -1,6 +1,22 @@
-FROM amazonlinux:1
+# use lambda CI because official amazonlinux:1 image does not seem very accurate
+FROM lambci/lambda-base:latest
 
-RUN yum update  -y && \
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin
+
+# We inspire ourself from the lambci docker-lambda base/build image
+RUN chmod 1777 /tmp && \
+  /usr/bin/python3 -c "from configparser import SafeConfigParser; \
+yum_conf = SafeConfigParser(); \
+yum_conf.read('/etc/yum.conf'); \
+yum_conf.has_section('main') or yum_conf.add_section('main'); \
+yum_conf.set('main', 'plugins', '1'); \
+f = open('/etc/yum.conf', 'w'); \
+yum_conf.write(f); \
+f.close();" && \
+  rpm --rebuilddb && \
+  yum install -y yum-plugin-ovl && \
+  yum reinstall -y setup pam shadow-utils audit-libs openssl glibc-common glibc && \
+  yum groupinstall -y development && \
   yum install -y \
     curl-devel \
     gcc72 \
@@ -8,8 +24,8 @@ RUN yum update  -y && \
     git \
     ninja-build \
     openssl-devel && \
-  yum clean all
-
+  yum clean all && \
+  rm -rf /var/cache/yum
 
 # download a *recent* version of cmake from cmake.org
 ENV CMAKE_VERSION_MAJOR 3.17
