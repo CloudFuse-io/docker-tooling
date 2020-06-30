@@ -6,24 +6,25 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin
 # We inspire ourself from the lambci docker-lambda base/build image
 RUN chmod 1777 /tmp && \
   /usr/bin/python3 -c "from configparser import SafeConfigParser; \
-yum_conf = SafeConfigParser(); \
-yum_conf.read('/etc/yum.conf'); \
-yum_conf.has_section('main') or yum_conf.add_section('main'); \
-yum_conf.set('main', 'plugins', '1'); \
-f = open('/etc/yum.conf', 'w'); \
-yum_conf.write(f); \
-f.close();" && \
+  yum_conf = SafeConfigParser(); \
+  yum_conf.read('/etc/yum.conf'); \
+  yum_conf.has_section('main') or yum_conf.add_section('main'); \
+  yum_conf.set('main', 'plugins', '1'); \
+  f = open('/etc/yum.conf', 'w'); \
+  yum_conf.write(f); \
+  f.close();" && \
   rpm --rebuilddb && \
   yum install -y yum-plugin-ovl && \
   yum reinstall -y setup pam shadow-utils audit-libs openssl glibc-common glibc && \
   yum groupinstall -y development && \
   yum install -y \
-    curl-devel \
-    gcc72 \
-    gcc72-c++ \
-    git \
-    ninja-build \
-    openssl-devel && \
+  curl-devel \
+  gcc72 \
+  gcc72-c++ \
+  git \
+  ninja-build \
+  valgrind \
+  openssl-devel && \
   yum clean all && \
   rm -rf /var/cache/yum
 
